@@ -24,6 +24,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public List<Cliente> obtenerClientesEspera(Long idFuncionario) {
-        return clienteRepository.obtenerClientes(idFuncionario);
+        //return clienteRepository.obtenerClientes(idFuncionario);
+        return null;
     }
 }
