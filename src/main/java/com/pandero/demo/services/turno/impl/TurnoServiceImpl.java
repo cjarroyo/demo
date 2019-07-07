@@ -5,12 +5,20 @@ import com.pandero.demo.entities.Funcionario;
 import com.pandero.demo.entities.Turno;
 import com.pandero.demo.repository.TurnoRepository;
 import com.pandero.demo.services.turno.TurnoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+@Service
 public class TurnoServiceImpl implements TurnoService {
 
     private TurnoRepository turnoRepository;
+
+    @Autowired
+    public TurnoServiceImpl(final TurnoRepository turnoRepository){
+        this.turnoRepository = turnoRepository;
+    }
 
     @Override
     public Turno generateCodigoYFuncionario(Cliente cliente, boolean preferencial) {

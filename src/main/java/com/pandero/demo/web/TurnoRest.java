@@ -5,29 +5,38 @@ import com.pandero.demo.entities.Turno;
 import com.pandero.demo.services.cliente.ClienteService;
 import com.pandero.demo.services.turno.TurnoService;
 import com.pandero.demo.wrapper.TurnoResponse;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
-public class SimpleController {
+@RestController
+@RequestMapping("/api-mobile")
+public class TurnoRest {
 
     private ClienteService clienteService;
     private TurnoService turnoService;
 
-    @Value("${spring.application.name}")
-    String appName;
-
-    @GetMapping("/")
-    public String homePage(Model model) {
-        model.addAttribute("appName", appName);
-        return "home";
+    @Autowired
+    public TurnoRest(final TurnoService turnoService, final ClienteService clienteService) {
+        this.turnoService = turnoService;
+        this.clienteService = clienteService;
     }
 
-    public TurnoResponse generarAtencion(String dni, boolean preferencial) {
+//    @Value("${spring.application.name}")
+//    String appName;
+//
+//    @GetMapping("/")
+//    public String homePage(Model model) {
+//        model.addAttribute("appName", appName);
+//        return "home";
+//    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public TurnoResponse generarAtencion(String dni, Boolean preferencial) {
         Cliente cliente = clienteService.findByDni(dni);
         Turno turno = turnoService.generateCodigoYFuncionario(cliente, preferencial);
         return TurnoResponse.builder()
@@ -36,6 +45,9 @@ public class SimpleController {
                 .build();
     }
 
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
     public void concluirAtencion(String codigo) {
         turnoService.cerrarAtencion(codigo);
         Cliente cliente = turnoService.obtenerClientePorCodigo(codigo);
@@ -43,6 +55,9 @@ public class SimpleController {
     }
 
 
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
     public List<Cliente> mostrarClientes(Long idFuncionario) {
         return clienteService.obtenerClientesEspera(idFuncionario);
     }
