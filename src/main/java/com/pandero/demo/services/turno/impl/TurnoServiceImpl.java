@@ -16,47 +16,44 @@ public class TurnoServiceImpl implements TurnoService {
     private TurnoRepository turnoRepository;
 
     @Autowired
-    public TurnoServiceImpl(final TurnoRepository turnoRepository){
+    public TurnoServiceImpl(final TurnoRepository turnoRepository) {
         this.turnoRepository = turnoRepository;
     }
 
     @Override
-    public Turno generateCodigoYFuncionario(Cliente cliente, boolean preferencial) {
+    public void generateTurno(Cliente cliente, boolean preferencial) {
         Turno turno = generarTurno(cliente, preferencial);
         persistirTurno(turno);
+    }
+
+    public Turno generarTurno(Cliente cliente, boolean preferencial) {
+        Turno turno = new Turno();
+        turno.setCliente(cliente);
+        turno.setPreferente(cliente.isPreferente() || preferencial);
+        turno.setEstado("E");
+        turno.setFechaIngreso(LocalDateTime.now());
+        turno.setIdProducto(cliente.getProducto().getId());
         return turno;
     }
 
     @Override
-    public void cerrarAtencion(String codigo) {
-        Turno turno = turnoRepository.findByCodigo(codigo);
-        turno.setAtendido(true);
-        turno.setFechaAtendido(LocalDateTime.now());
+    public void atenderCliente(Cliente cliente, Funcionario funcionario) {
+        Turno turno = turnoRepository.findByClienteAndEstado(cliente, "E");
+        turno.setEstado("A");
+        turno.setFuncionario(funcionario);
         turnoRepository.save(turno);
     }
 
     @Override
-    public Cliente obtenerClientePorCodigo(String codigo) {
-        return turnoRepository.findByCodigo(codigo).getCliente();
+    public void concluirAtencion(Cliente cliente) {
+        Turno turno = turnoRepository.findByClienteAndEstado(cliente, "A");
+        turno.setEstado("C");
+        turno.setFechaAtendido(LocalDateTime.now());
+        turnoRepository.save(turno);
     }
 
     private void persistirTurno(Turno turno) {
         turnoRepository.save(turno);
     }
 
-    public Turno generarTurno(Cliente cliente, boolean preferencial) {
-        //TODO: usando threads genero el codigo de atencion
-        // (aqui verifico que funcionario esta mas disponible, segun su preferencia y segun el tipo de producto
-        // y que teenga como maximo 10)
-        String codigo = "PRE-001";
-        Funcionario funcionario = Funcionario.builder().build();
-        return Turno.builder()
-                .cliente(cliente)
-                .funcionario(funcionario)
-                .preferente(true)
-                .codigo(codigo)
-                .atendido(false)
-                .fechaIngreso(LocalDateTime.now())
-                .build();
-    }
 }

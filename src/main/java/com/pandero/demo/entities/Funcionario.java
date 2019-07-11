@@ -1,26 +1,21 @@
 package com.pandero.demo.entities;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
 @Entity
-@Builder
 public class Funcionario {
     @Id
     private Long id;
     private String nombre;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_id_backup", nullable = false)
-    private Funcionario backup;
-    private boolean activo;
+    @OneToMany(mappedBy="funcionario")
+    private List<Turno> turnos;
 
+    private boolean activo;
 }

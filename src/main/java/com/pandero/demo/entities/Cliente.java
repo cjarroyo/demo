@@ -1,6 +1,7 @@
 package com.pandero.demo.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,4 +32,5 @@ public class Cliente {
     private Producto producto;
 
     private boolean activo;
+
 }

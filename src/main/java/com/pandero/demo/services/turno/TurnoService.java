@@ -1,13 +1,14 @@
 package com.pandero.demo.services.turno;
 
-import com.pandero.demo.entities.Cliente;
-import com.pandero.demo.entities.Turno;
+        import com.pandero.demo.entities.Cliente;
+        import com.pandero.demo.entities.Funcionario;
 
 public interface TurnoService {
 
-    Turno generateCodigoYFuncionario(Cliente cliente, boolean preferencial);
+    void generateTurno(Cliente cliente, boolean preferencial);
 
-    void cerrarAtencion(String coodigo);
+    void atenderCliente(Cliente cliente, Funcionario funcionario);
 
-    Cliente obtenerClientePorCodigo(String codigo);
+    void concluirAtencion(Cliente cliente);
+
 }
