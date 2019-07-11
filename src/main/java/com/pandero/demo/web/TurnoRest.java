@@ -7,6 +7,7 @@ import com.pandero.demo.services.cliente.ClienteService;
 import com.pandero.demo.services.funcionario.FuncionarioService;
 import com.pandero.demo.services.funcionariocliente.FuncionarioClienteService;
 import com.pandero.demo.services.turno.TurnoService;
+import com.pandero.demo.wrapper.AtencionRequest;
 import com.pandero.demo.wrapper.TurnoRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,13 +53,12 @@ public class TurnoRest {
     }
 
 
-    @PatchMapping("/atender/{id}")
+    @PatchMapping("/atender}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public void atenderCliente(@PathVariable Long id) {
-        //por session traer el id del funcionario
-        Funcionario funcionario = funcionarioService.findById(2L);
-        Cliente cliente = clienteService.findById(id);
+    public void atenderCliente(@RequestBody AtencionRequest atencionRequest) {
+        Funcionario funcionario = funcionarioService.findById(atencionRequest.getIdFuncionario());
+        Cliente cliente = clienteService.findById(atencionRequest.getIdCliente());
         turnoService.atenderCliente(cliente, funcionario);
     }
 
